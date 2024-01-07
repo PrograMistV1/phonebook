@@ -1,5 +1,4 @@
 Projekt „Książka telefoniczna”:
-
 Umożliwia przechowywanie informacji kontaktowych, takich jak imię, nazwisko, numer telefonu i adres e-mail.
 
 Program zapewnia prosty interfejs tekstowy, w którym użytkownik wprowadza polecenia w celu wykonania różnych operacji.
