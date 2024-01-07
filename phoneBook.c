@@ -57,9 +57,6 @@ void loadContactsFromFile(PhoneBook *phoneBook) {
     fclose(file);
 }
 
-/**
- * initializing a new contact book
- */
 void newPhoneBook(PhoneBook* contacts) {
     contacts->lastIndex = -1;
     contacts->contact = malloc(sizeof(Contact *) * 0);

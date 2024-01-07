@@ -20,20 +20,44 @@ typedef struct {
     Contact **contact;
 } PhoneBook;
 
+/**
+ * saving contacts to file
+ */
 void saveContactsToFile(const PhoneBook *phoneBook);
 
+/**
+ * loading contacts from file
+ */
 void loadContactsFromFile(PhoneBook *phoneBook);
 
 void clearConsole();
 
+/**
+ * initializing a new contact book
+ */
 void newPhoneBook(PhoneBook *contacts);
 
+/**
+ * releasing allocated memory
+ */
 void freePhoneBook(const PhoneBook *contacts);
 
+/**
+ * displaying a contact to the console
+ */
 void printContact(Contact* contact);
 
+/**
+ * adding a contact to a book
+ */
 void addContact(PhoneBook *contacts, const Contact *contact);
 
+/**
+ * deleting a contact from a book
+ */
 void removeContact(PhoneBook *contacts);
 
+/**
+ * editing a contact from a book
+ */
 void editContact(Contact *contact);

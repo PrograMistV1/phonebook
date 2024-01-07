@@ -5,9 +5,6 @@
 
 #include "phoneBook.h"
 
-
-
-
 int main() {
     PhoneBook contactList;
     newPhoneBook(&contactList);
