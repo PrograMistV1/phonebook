@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 void clearConsole() {
 #ifdef _WIN32
@@ -12,12 +13,59 @@ void clearConsole() {
 #endif
 }
 
-void newPhoneBook(array* contacts) {
+void saveContactsToFile(const PhoneBook *phoneBook) {
+    char path[PATH_MAX];
+    getcwd(path, sizeof(path));
+
+    strcat(path, "/contacts.dat");
+
+    FILE *file = fopen(path, "wb");
+    if (!file) {
+        perror("Error opening file");
+        return;
+    }
+
+    fwrite(&phoneBook->lastIndex, sizeof(int), 1, file);
+
+    for (int i = 0; i <= phoneBook->lastIndex; ++i) {
+        fwrite(phoneBook->contact[i], sizeof(Contact), 1, file);
+    }
+
+    fclose(file);
+}
+
+void loadContactsFromFile(PhoneBook *phoneBook) {
+    char path[PATH_MAX];
+    getcwd(path, sizeof(path));
+
+    strcat(path, "/contacts.dat");
+
+    FILE *file = fopen(path, "rb");
+
+    if(file == NULL) {
+        return;
+    }
+
+    int count;
+    fread(&count, sizeof(int), 1, file);
+
+    for (int i = 0; i <= count; ++i) {
+        Contact contact = {};
+        fread(&contact, sizeof(Contact), 1, file);
+        addContact(phoneBook, &contact);
+    }
+    fclose(file);
+}
+
+/**
+ * initializing a new contact book
+ */
+void newPhoneBook(PhoneBook* contacts) {
     contacts->lastIndex = -1;
     contacts->contact = malloc(sizeof(Contact *) * 0);
 }
 
-void freePhoneBook(const array* contacts) {
+void freePhoneBook(const PhoneBook* contacts) {
     for (int i = 0; i < contacts->lastIndex; ++i) {
         free(contacts->contact[i]);
     }
@@ -34,15 +82,16 @@ void printContact(Contact* contact) {
     printf("\n");
 }
 
-void addContact(array* contacts, const Contact* contact) {
+void addContact(PhoneBook* contacts, const Contact* contact) {
     contacts->lastIndex++;
     contacts->contact = realloc(contacts->contact, sizeof(Contact *) * (contacts->lastIndex + 1));
 
     contacts->contact[contacts->lastIndex] = malloc(sizeof(Contact));
     *contacts->contact[contacts->lastIndex] = *contact;
+    saveContactsToFile(contacts);
 }
 
-void removeContact(array* contacts) {
+void removeContact(PhoneBook* contacts) {
     printf("index: $ ");
     char dirtyIndex[20], *end;
     fgets(dirtyIndex, sizeof(dirtyIndex), stdin);
@@ -68,6 +117,8 @@ void removeContact(array* contacts) {
 
     contacts->lastIndex--;
     contacts->contact = realloc(contacts->contact, sizeof(Contact *) * (contacts->lastIndex + 1));
+
+    saveContactsToFile(contacts);
 
     clearConsole();
     printf("Contact deleted\n");

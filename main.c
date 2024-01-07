@@ -6,9 +6,13 @@
 #include "phoneBook.h"
 
 
+
+
 int main() {
-    array contactList;
+    PhoneBook contactList;
     newPhoneBook(&contactList);
+
+    loadContactsFromFile(&contactList);
 
     clearConsole();
 
@@ -67,6 +71,7 @@ int main() {
             clearConsole();
 
             editContact(contactList.contact[index]);
+            saveContactsToFile(&contactList);
         }
 
         if (strcmp(command, "exit") == 0) {
