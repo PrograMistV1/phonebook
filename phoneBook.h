@@ -45,7 +45,7 @@ void freePhoneBook(const PhoneBook *contacts);
 /**
  * displaying a contact to the console
  */
-void printContact(Contact* contact);
+void printContact(const Contact* contact);
 
 /**
  * adding a contact to a book

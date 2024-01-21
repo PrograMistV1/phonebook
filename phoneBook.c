@@ -15,46 +15,50 @@ void clearConsole() {
 
 void saveContactsToFile(const PhoneBook *phoneBook) {
     char path[PATH_MAX];
-    getcwd(path, sizeof(path));
+    getcwd(path, sizeof(path)); //getting the path to the executable file
 
-    strcat(path, "/contacts.dat");
+    strcat(path, "/contacts.dat"); //specify the name of the file to save data
 
-    FILE *file = fopen(path, "wb");
+    FILE *file = fopen(path, "wb"); //open the file
     if (!file) {
         perror("Error opening file");
         return;
     }
-
+    /**
+     * we write down the number of contacts in the book,
+     * this is necessary so that when loading from a file we can read the same number of contacts
+    */
     fwrite(&phoneBook->lastIndex, sizeof(int), 1, file);
 
+
     for (int i = 0; i <= phoneBook->lastIndex; ++i) {
-        fwrite(phoneBook->contact[i], sizeof(Contact), 1, file);
+        fwrite(phoneBook->contact[i], sizeof(Contact), 1, file); //write contacts to a file
     }
 
-    fclose(file);
+    fclose(file); //close the file
 }
 
 void loadContactsFromFile(PhoneBook *phoneBook) {
     char path[PATH_MAX];
-    getcwd(path, sizeof(path));
+    getcwd(path, sizeof(path)); //getting the path to the executable file
 
-    strcat(path, "/contacts.dat");
+    strcat(path, "/contacts.dat"); //specify the name of the file to save data
 
-    FILE *file = fopen(path, "rb");
+    FILE *file = fopen(path, "rb"); //open the file
 
     if(file == NULL) {
         return;
     }
 
     int count;
-    fread(&count, sizeof(int), 1, file);
+    fread(&count, sizeof(int), 1, file); //get the number of saved contacts
 
     for (int i = 0; i <= count; ++i) {
         Contact contact = {};
-        fread(&contact, sizeof(Contact), 1, file);
+        fread(&contact, sizeof(Contact), 1, file); //getting contacts
         addContact(phoneBook, &contact);
     }
-    fclose(file);
+    fclose(file); //close file
 }
 
 void newPhoneBook(PhoneBook* contacts) {
@@ -70,7 +74,7 @@ void freePhoneBook(const PhoneBook* contacts) {
     printf("memory released\n");
 }
 
-void printContact(Contact* contact) {
+void printContact(const Contact* contact) {
     printf("First Name: %s\n", contact->firstName);
     printf("Last Name: %s\n", contact->lastName);
     printf("Phone Number: %s\n", contact->phoneNumber);
